@@ -1,5 +1,6 @@
 import sqlite3 from 'sqlite3';
 import { CountersConstants, ID_COLUMN, TimerDetailsConstants } from './dbConstants';
+import { isRowCount } from './RowCount';
 
 export class DatabaseInitializer {
   public static initialize() {
