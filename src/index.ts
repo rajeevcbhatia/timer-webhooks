@@ -56,8 +56,9 @@ app.post('/timers', async (req, res) => {
 
     // Respond with the inserted timer along with its _id
     res.json({
-      id: result.insertedId,
-      time_left: dueTimestamp - Math.floor(Date.now() / 1000),
+      [TimerDetailsConstants.ID]: result.insertedId,
+      [TimerDetailsConstants.TIME_LEFT]:
+        dueTimestamp - Math.floor(Date.now() / 1000),
     })
   } catch (error) {
     if (
