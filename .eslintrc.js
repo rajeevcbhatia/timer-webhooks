@@ -4,9 +4,13 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
-    // 'plugin:prettier/recommended',
+    'prettier', // 'prettier/@typescript-eslint' has been merged into 'prettier'
+    'plugin:prettier/recommended',
   ],
   rules: {
-    // your custom rules here
+    'prettier/prettier': 'error',
+    'linebreak-style': 0,
+    // If the semi problem persists, explicitly set it here too:
+    semi: 'off',
   },
-};
+}
