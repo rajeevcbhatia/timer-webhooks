@@ -2,12 +2,14 @@ import TimerDetailsRepository from '../db/repository/TimerDetailsRepository'
 import { TimerDetails } from '../models/TimerDetails'
 import { TimerDetailsConstants } from '../db/DbConstants'
 import { ObjectId } from 'mongodb'
+import { TimerScheduler } from '../scheduler/TimerScheduler'
 
 export class ValidationError extends Error {}
 export class NotFoundError extends Error {}
+export class TimerCreationError extends Error {}
 
 class TimerService {
-  async createAndStoreTimer(
+  async createStoreAndScheduleTimer(
     hours: number,
     minutes: number,
     seconds: number,
@@ -34,10 +36,20 @@ class TimerService {
 
     const result = await TimerDetailsRepository.createTimer(timer)
 
-    return {
-      [TimerDetailsConstants.ID]: result.insertedId,
-      [TimerDetailsConstants.TIME_LEFT]:
+    if (result.acknowledged) {
+      const insertedId = result.insertedId
+      TimerScheduler.schedule(
+        insertedId,
         dueTimestamp - Math.floor(Date.now() / 1000),
+        timer.webHookURL,
+      )
+      return {
+        [TimerDetailsConstants.ID]: result.insertedId,
+        [TimerDetailsConstants.TIME_LEFT]:
+          dueTimestamp - Math.floor(Date.now() / 1000),
+      }
+    } else {
+      throw new TimerCreationError('Timer creation was not acknowledged.')
     }
   }
 

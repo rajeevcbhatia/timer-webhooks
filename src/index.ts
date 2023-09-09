@@ -3,6 +3,7 @@ import { DatabaseInitializer } from './db/DatabaseInitializer'
 import { DatabaseConnection } from './db/DatabaseConnection'
 import TimerService, {
   NotFoundError,
+  TimerCreationError,
   ValidationError,
 } from './services/TimerService'
 
@@ -19,7 +20,7 @@ app.get('/', (req, res) => {
 
 app.post('/timers', async (req, res) => {
   try {
-    const response = await TimerService.createAndStoreTimer(
+    const response = await TimerService.createStoreAndScheduleTimer(
       +req.body.hours,
       +req.body.minutes,
       +req.body.seconds,
@@ -47,6 +48,8 @@ app.get('/timers/:id', async (req, res) => {
       res.status(404).send(error.message)
     } else if (error instanceof ValidationError) {
       res.status(400).send(error.message)
+    } else if (error instanceof TimerCreationError) {
+      res.status(500).send('Could not create timer. Please try again.')
     } else {
       console.error(error)
       res.status(500).send('Internal Server Error')
