@@ -1,5 +1,5 @@
 import { DatabaseConnection } from './DatabaseConnection'
-import { TimerDetailsConstants } from './dbConstants'
+import { TimerDetailsConstants } from './DbConstants'
 import { MongoClient } from 'mongodb'
 
 export class DatabaseInitializer {

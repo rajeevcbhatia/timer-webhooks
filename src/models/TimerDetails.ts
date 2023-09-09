@@ -1,4 +1,4 @@
-import { TimerDetailsConstants } from '../db/dbConstants'
+import { TimerDetailsConstants } from '../db/DbConstants'
 
 export interface TimerDetails {
   [TimerDetailsConstants.DUE_TIMESTAMP_COLUMN]: number

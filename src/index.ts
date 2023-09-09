@@ -1,9 +1,7 @@
 import express from 'express'
 import { DatabaseInitializer } from './db/DatabaseInitializer'
 import { DatabaseConnection } from './db/DatabaseConnection'
-import { TimerDetailsConstants } from './db/dbConstants'
-import { MongoServerError } from 'mongodb'
-import { TimerDetails } from './models/TimerDetails'
+import TimerService, { ValidationError } from './services/TimerService'
 
 const app = express()
 const port = 8081
@@ -18,62 +16,20 @@ app.get('/', (req, res) => {
 
 app.post('/timers', async (req, res) => {
   try {
-    const {
-      hours: rawHours,
-      minutes: rawMinutes,
-      seconds: rawSeconds,
-      url,
-    } = req.body
-
-    const hours = +rawHours
-    const minutes = +rawMinutes
-    const seconds = +rawSeconds
-
-    console.log('hours:', hours)
-    console.log('minutes:', minutes)
-    console.log('seconds:', seconds)
-    console.log('url:', url)
-
-    if (![hours, minutes, seconds].every(Number.isFinite) || !url) {
-      res.status(400).send('Invalid input')
-      return
-    }
-
-    const dueTimestamp =
-      Math.floor(Date.now() / 1000) + hours * 3600 + minutes * 60 + seconds
-
-    // Create timer object
-    const timer: TimerDetails = {
-      dueTimeStamp: dueTimestamp,
-      webHookURL: url,
-      isFired: false,
-    }
-
-    // Insert into MongoDB
-    const result = await DatabaseConnection.database
-      .collection(TimerDetailsConstants.TABLE_NAME)
-      .insertOne(timer)
-
-    // Respond with the inserted timer along with its _id
-    res.json({
-      [TimerDetailsConstants.ID]: result.insertedId,
-      [TimerDetailsConstants.TIME_LEFT]:
-        dueTimestamp - Math.floor(Date.now() / 1000),
-    })
+    const response = await TimerService.createAndStoreTimer(
+      +req.body.hours,
+      +req.body.minutes,
+      +req.body.seconds,
+      req.body.url,
+    )
+    res.json(response)
   } catch (error) {
-    if (
-      error instanceof MongoServerError &&
-      error.errInfo &&
-      error.errInfo.details
-    ) {
-      console.log(
-        'Missing properties:',
-        error.errInfo.details.schemaRulesNotSatisfied[0].missingProperties,
-      )
+    if (error instanceof ValidationError) {
+      res.status(400).send(error.message)
     } else {
-      console.log(error)
+      console.error(error) // Log the unexpected error for debugging
+      res.status(500).send('Internal Server Error')
     }
-    res.status(500).send('Internal Server Error')
   }
 })
 
