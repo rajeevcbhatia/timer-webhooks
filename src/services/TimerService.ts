@@ -1,8 +1,10 @@
 import TimerDetailsRepository from '../db/repository/TimerDetailsRepository'
 import { TimerDetails } from '../models/TimerDetails'
 import { TimerDetailsConstants } from '../db/DbConstants'
+import { ObjectId } from 'mongodb'
 
 export class ValidationError extends Error {}
+export class NotFoundError extends Error {}
 
 class TimerService {
   async createAndStoreTimer(
@@ -37,6 +39,34 @@ class TimerService {
       [TimerDetailsConstants.TIME_LEFT]:
         dueTimestamp - Math.floor(Date.now() / 1000),
     }
+  }
+
+  async getTimer(timerId: string) {
+    // Fetch the timer from the database
+    let objectId
+
+    try {
+      objectId = new ObjectId(timerId)
+    } catch (error) {
+      throw new ValidationError('Invalid ID format')
+    }
+    const timer = await TimerDetailsRepository.getTimer(objectId)
+
+    if (!timer) {
+      throw new NotFoundError('Timer not found')
+    }
+
+    // Calculate the remaining time
+    const currentTime = Math.floor(Date.now() / 1000)
+    const timeLeft = timer.dueTimeStamp - currentTime
+
+    // Send the response
+    const response = {
+      [TimerDetailsConstants.ID]: timerId,
+      [TimerDetailsConstants.TIME_LEFT]: timeLeft,
+    }
+
+    return response
   }
 }
 
