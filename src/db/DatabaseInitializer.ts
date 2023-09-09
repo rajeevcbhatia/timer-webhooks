@@ -25,15 +25,11 @@ export class DatabaseInitializer {
             $jsonSchema: {
               bsonType: 'object',
               required: [
-                ID_COLUMN,
                 TimerDetailsConstants.DUE_TIMESTAMP_COLUMN,
                 TimerDetailsConstants.WEBHOOK_URL_COLUMN,
                 TimerDetailsConstants.IS_FIRED_COLUMN,
               ],
               properties: {
-                [ID_COLUMN]: {
-                  bsonType: 'string',
-                },
                 [TimerDetailsConstants.DUE_TIMESTAMP_COLUMN]: {
                   bsonType: 'int',
                 },
