@@ -12,7 +12,9 @@ export class TimerScheduler {
   static async handleUnfiredTimers() {
     try {
       // Fetch all unfired timers
+      console.log('Fetching timers')
       const unfiredTimers = await TimerDetailsRepository.getUnfiredTimers()
+      console.log(unfiredTimers)
       const now = Math.floor(Date.now() / 1000)
 
       for (const timer of unfiredTimers) {
@@ -33,6 +35,7 @@ export class TimerScheduler {
   private static async fireTimer(id: ObjectId) {
     const timer = await TimerDetailsRepository.setIsFiredIfNotAlready(id)
     if (timer && !timer.isFired) {
+      console.log('Firing timer ' + id.toString())
       try {
         await axios.post(`${timer.webhookURL}/${id}`)
       } catch (error) {

@@ -4,8 +4,8 @@ import { MongoClient } from 'mongodb'
 
 export class DatabaseInitializer {
   private static client: MongoClient
-  public static initialize() {
-    this.initializeMongoDB()
+  public static async initialize() {
+    await this.initializeMongoDB()
   }
 
   private static async initializeMongoDB() {
