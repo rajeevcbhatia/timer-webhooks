@@ -6,6 +6,7 @@ import TimerService, {
   TimerCreationError,
   ValidationError,
 } from './services/TimerService'
+import { TimerScheduler } from './scheduler/TimerScheduler'
 
 const app = express()
 const port = 8081
@@ -13,6 +14,7 @@ app.use(express.json())
 
 DatabaseConnection.connect()
 DatabaseInitializer.initialize()
+TimerScheduler.handleUnfiredTimers()
 
 app.get('/', (req, res) => {
   res.send('Hello World!')

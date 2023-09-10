@@ -36,6 +36,13 @@ class TimerDetailsRepository {
 
     return result // this will return the original document before the update was applied
   }
+
+  async getUnfiredTimers() {
+    return await DatabaseConnection.database
+      .collection(TimerDetailsConstants.TABLE_NAME)
+      .find({ isFired: false })
+      .toArray()
+  }
 }
 
 export default new TimerDetailsRepository()

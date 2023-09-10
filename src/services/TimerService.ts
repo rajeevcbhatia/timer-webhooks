@@ -41,7 +41,6 @@ class TimerService {
       TimerScheduler.schedule(
         insertedId,
         dueTimestamp - Math.floor(Date.now() / 1000),
-        timer.webHookURL,
       )
       return {
         [TimerDetailsConstants.ID]: result.insertedId,
