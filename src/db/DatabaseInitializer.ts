@@ -14,8 +14,6 @@ export class DatabaseInitializer {
     const collections = await DatabaseConnection.database
       .listCollections({ name: TimerDetailsConstants.TABLE_NAME })
       .toArray()
-    console.log('COLLECTIONS')
-    console.log(collections.length)
     if (collections.length === 0) {
       // Create the collection with the validator if it doesn't exist
       await DatabaseConnection.database.createCollection(

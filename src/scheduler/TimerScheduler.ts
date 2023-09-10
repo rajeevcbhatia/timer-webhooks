@@ -50,7 +50,7 @@ export class TimerScheduler {
           // Response was received with error
           console.error(
             'Server responded with an error:',
-            axiosError.response.data,
+            axiosError.response.statusText,
           )
         } else if (axiosError.request) {
           // No response but request was made
@@ -63,7 +63,7 @@ export class TimerScheduler {
           console.error('Error setting up the request:', axiosError.message)
         }
         // Log more details if needed
-        console.error(axiosError.config)
+        // console.error(axiosError.config)
       }
     }
   }
