@@ -80,7 +80,7 @@ Designed with horizontal scalability in mind:
 
 ## Next Steps
 
-**1. Database Optimization:** Consider moving expired timers to a lightweight, persistent data structure containing only their IDs. This ensures that all active timers in the database haven't been fired.
-**2. Extending Horizontal Scalability:** Implement a message queue paradigm. Split the service: one handles timer creation and database insertion; the other schedules timers and adds them to the queue. This ensures only one app instance fires the timer.
-**3. Testing:** Add Integration and End-to-End tests.
-**4. Development Efficiency:** Introduce a nodemon script for hot-reloading during development.
+1.**Database Optimization:** Consider moving expired timers to a lightweight, persistent data structure containing only their IDs. This ensures that all active timers in the database haven't been fired.
+2.**Extending Horizontal Scalability:** Implement a message queue paradigm. Split the service: one handles timer creation and database insertion; the other schedules timers and adds them to the queue. This ensures only one app instance fires the timer.
+3.**Testing:** Add Integration and End-to-End tests.
+4.**Development Efficiency:** Introduce a nodemon script for hot-reloading during development.
