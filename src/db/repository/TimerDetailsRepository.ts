@@ -28,11 +28,11 @@ class TimerDetailsRepository {
           $set: { isFired: true },
         },
         {
-          returnDocument: 'before', // this will ensure you get the original document before the update
+          returnDocument: 'before', // because we want the original object
         },
       )
 
-    console.log('findOneAndUpdate result:', result) // Log the entire result object
+    console.log('findOneAndUpdate result:', result)
 
     return result // this will return the original document before the update was applied
   }
